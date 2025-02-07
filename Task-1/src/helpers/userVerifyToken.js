@@ -1,29 +1,30 @@
-const jet = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const User = require('../model/user.model');
 
 exports.userVerifyToken = async (req, res, next) => {
     try {
-        const authoraization = req.headers['authorization'];
-        if (authoraization === undefined) {
-            return res.status(404).json({ message: `Invalid Authoraization ${console.error()}`});            
+        const authorization = req.headers['authorization'];
+        if (authorization === undefined) {
+            return res.json({message: `Invalid Authorization ${console.error()}`});
         }
-        const token = authoraization.split(' ')[1];
+        let token = authorization.split(" ")[1];
         console.log(token);
-        if (token !== undefined) {
-            return res.status(401).json({ message: `Unauthorization ${console.error()}` });
+        if (token === undefined) {
+            return res.status(401).json({ message: `Unauthorize ${console.error()}`})
         } else {
-            let { userId} = jwt.token(token, 'user');
+            let {userId} = jwt.verify(token, 'User')
             console.log(userId);
             let user = await User.findById(userId);
             console.log(user);
             if (user) {
                 req.user = user;
+                next();
             } else {
-                return res.status(401).json({ message: `Invalid User (token) ${consle.error()}`})
+                return res.status(401).json({message: `Invalid User(token) ${console.error()}`})
             }
         }
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: `Error: ${error.message}`})
+        res.json({ message: `Internal Server Error From User Token ${console.error()}`});
     }
 }

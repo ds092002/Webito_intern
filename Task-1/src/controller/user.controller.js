@@ -50,30 +50,34 @@ exports.loginUser =  async (req, res) => {
     }
 }
 
-exports.forgetPassword = async(req, res) => {
+exports.forgetPassword = async (req, res) => {
     try {
-        let user = await userService.getUserById(req.user._id);
-        if(!user){
-            return res.json({ message: `User Not Found...Please try Again...`});
+        let { oldPassword, newPassword, confirmPassword } = req.body;
+
+        let user = await userService.getUserById(req.query.userId);
+        if (!user) {
+            return res.json({ message: 'User Not Found. Please Try Again.' });
         }
-        let comparePassword = await bcryptjs.compare(
-            req.body.oldPassword, 
-            user.password
-        );
+
+        let comparePassword = await bcryptjs.compare(oldPassword, newPassword);
         if (!comparePassword) {
-            return res.json({ message: `Old Password is not Match.. Please Try Again.`});
+            return res.status(404).json({ message: 'Incorrect Current Password.' });
         }
-        if(req.body.newPassword === req.body.oldPassword){
-            return res.json({ message: `Old Password And New Password Are Same Plase Enter Diffrent Password..`});
+
+        if (newPassword === oldPassword) {
+            return res.json({ message: 'Old Password And New Password Are Same. Please Enter a Different Password.' });
         }
-        if(req.body.newPassword !== req.body.confirmPassword){
-            return res.json({ message: `New Password And Confirm Password is not Same.. Please Try Again.`});
+
+        if (newPassword !== confirmPassword) {
+            return res.json({ message: 'New Password And Confirm Password Do Not Match.' });
         }
-        let hashPassword = await bcryptjs.hash(req.body.newPassword, 10);
-        user = await userService.updateUser(req.user._id, {password: hashPassword});
-        res.status(200).json({user, message: 'Password changed successfully.....👍🏻' });
+
+        let hashPassword = await bcryptjs.hash(newPassword, 10);
+        user = await userService.updateUser(user._id, { password: hashPassword });
+
+        res.status(200).json({ user, message: 'Password Update Successful.' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: `Internal Server Error..${console.error()}`});
+        res.status(500).json({ message: 'Internal Server Error.' });
     }
 };
