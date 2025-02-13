@@ -1,0 +1,22 @@
+HTTP Methods
+
+1xx  -> Information
+2xx  -> Success
+3xx  -> Redirection
+4xx  -> Client Error
+5xx  -> Server Error
+
+100 -> Continues
+102 -> Processing
+200 -> Ok
+201 -> Created
+202 -> Accepted
+307 -> Temporary redireact
+307 -> Permenent redireact
+400 -> Bad Request
+401 -> Auauthorized
+402 -> Payment Requried
+404 -> Not Found
+500 -> Internal Server Error
+504 -> Gateway Time Out
+

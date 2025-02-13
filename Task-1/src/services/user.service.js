@@ -32,4 +32,20 @@ module.exports = class UserServices {
             return error.message;
         }
     }
+    async getAllUsers(body) {
+        try {
+          return await User.find(body);
+        } catch (error) {
+          console.log(error);
+          return error.message;
+        }
+      }
+      async getUserByEmail(email) {
+        try {
+          return await User.findOne({ email }).exec();
+        } catch (error) {
+            console.log(error);
+            return error.message;
+        }
+      }
 }
