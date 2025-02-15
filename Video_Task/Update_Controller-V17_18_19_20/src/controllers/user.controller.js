@@ -185,7 +185,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 })
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-    const incomingRefreshToken = req.cookie.refreshToken || req.body.refreshToken
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 
     if (!incomingRefreshToken) {
         throw new ApiError(401, "unauthorized request")
@@ -349,8 +349,8 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     )
 })
 
-const getUserChannelProfile = asyncHandler(async (req, res) => {
-    const {username} = req.params;
+const getUserChannelProfile = asyncHandler(async(req, res) => {
+    const {username} = req.params
 
     if (!username?.trim()) {
         throw new ApiError(400, "username is missing")
@@ -358,12 +358,12 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 
     const channel = await User.aggregate([
         {
-            $match:{
+            $match: {
                 username: username?.toLowerCase()
             }
         },
         {
-            $lookup:{
+            $lookup: {
                 from: "subscriptions",
                 localField: "_id",
                 foreignField: "channel",
@@ -371,7 +371,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
             }
         },
         {
-            $lookup:{
+            $lookup: {
                 from: "subscriptions",
                 localField: "_id",
                 foreignField: "subscriber",
@@ -379,15 +379,15 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
             }
         },
         {
-            $addFields:{
+            $addFields: {
                 subscribersCount: {
                     $size: "$subscribers"
                 },
                 channelsSubscribedToCount: {
-                    $size: "#subscribedTo"
+                    $size: "$subscribedTo"
                 },
                 isSubscribed: {
-                    $cond:{
+                    $cond: {
                         if: {$in: [req.user?._id, "$subscribers.subscriber"]},
                         then: true,
                         else: false
@@ -396,7 +396,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
             }
         },
         {
-            $projects: {
+            $project: {
                 fullName: 1,
                 username: 1,
                 subscribersCount: 1,
@@ -404,7 +404,8 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
                 isSubscribed: 1,
                 avatar: 1,
                 coverImage: 1,
-                 email: 1
+                email: 1
+
             }
         }
     ])
