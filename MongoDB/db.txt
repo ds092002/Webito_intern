@@ -1,0 +1,113 @@
+v-1 what is mongodb
+    -> Mongodb is databese server
+    -> Document save as json formate
+    -> less relation
+    -> Data is Store together
+
+    * BSON -> Document Store JSON formate but behind stored BSON  
+
+v-2 Dawonlode Mongodb
+    -> https://www.mongodb.com/try/download/community
+
+V-3 install tedora
+
+
+V-4 
+    ---|| Create DB ||---
+    * use yourDatabaseName    -> use Dhaval
+    
+    ---|| Create Collection ||---
+    * db.createCollection     -> db.Students
+
+    ---|| Inser One ||---
+    * db.Students.insertOne({ name: "Jay", value: 143 })
+
+    ---|| Show Collection In Data ||---
+    * db.Students.find()
+
+V-5 Nested Document
+    ---|| Update Data ||---
+    db.Students.updateOne({name:'jay'},{$set:{idcards:{hasPanCard:false,hasAdhaarCard:true}}})  
+    ---|| Fine Data ||---  
+    db.StudentsfindOne({name:'jay'})
+
+V-6 CRUD
+    ---|| CREATE ||---   
+        ==> insertOne(data,options)
+        ==> insertMany(data,options) 
+
+    ---|| READ ||---    
+        ==> find(filter,options)
+        ==> findOne(filter,options)
+
+    ---|| UPADATE ||---  
+        ==> updateOne(filter,data,options)  
+        ==> updateMany(filter,data,options)  
+        ==> relaceOne(filter,data,options)  
+
+    ---|| DELETE ||---    
+        ==> deleteOne(filter,options)
+        ==> deleteMany(filter,options)
+
+V-7 Find Vs FindOne        
+    ---> db.Students.find({age:'11'})     ==> Show all Date
+    ---> db.Students.findOne({age:'11'})  ==> Show Frist Match Data
+
+V-8  HOW TO INSERT DOCUMENTS IN Collection
+    ==>  db.Students.insertOne({ name: "jay", age: 13 })
+    ==>  db.Students.insertMany([{ name: "ram", age: 32 },{ name: "jay", age: 13 }])
+
+V-9 HOW TO UPDATE DOCUMENT IN Mongodb
+    ==> db.Students.updateOne({name:'ram'},{$set:{age:25}})
+    ==> db.Students.updateMany({age:13},{$set:{age:15}})
+
+V-10 HOW TO DELETE DOCUMENT IN Mongodb
+    ==> db.Students.deleteMany({age:13})
+    ==> db.Students.deleteOne({name:'jay'})
+    ==> db.Students.deleteMany({})     => DELETE ALL DATA 
+
+V-11 SELECT QUERY COLUMN
+    ==> db.Students.find({},{name:1})               --> show _id and Name 
+    ==> db.Students.find({},{name:1,_id:0,age:0})   --> Show Only name
+
+V-12 IS MONGODB REALLY SCHEMALESS
+    ==> {_id:1,name:"ram"}    
+    ==> {_id:2,name:"ghanshyam"}    
+    ==> {_id:3,name:"shyam",addharNo:23456}    
+
+V-13 DATATYPE IN MONGODB
+    ==> Text
+    ==> Boolean
+    ==> Number == 1. Integer - 32 bit , 2. NumberLong - 64 bit, 3. NumberDecimal
+    ==> ObjectId
+    ==> ISO Date
+    ==> Timestamps
+    ==> Array
+    ==> Emd Document
+    
+    db.companyData.insertOne({ name: "DS" , isFunded: true, funding:845451364343215644 , employees: [ {name:"amit" , age:20}, {name:"bim" , age:23}], foundedOn: New Date(), foundedTimestamp: new Timestamps() })
+
+V-14 DELETE DATABASE
+    use mydb
+
+    db.dropDatabase(); ==> Delete all databases
+    db.product.drop() ==> delete only one database
+
+V-15 ORDERD OPTION IN INSERT COMMAND
+
+    db.books.insertMany([{name:"A", price:1}, {name:"B", price:2}])
+
+    db.books.deleteMany({}) ==> {} empty object delete all data in books 
+
+    db.books.insertMany([{_id:"A",name:"A", price:1}, {_id:"B",name:"B", price:2}])
+    db.books.insertMany([{_id:"C",name:"C", price:1}, {_id:"A",name:"D", price:2},{_id:"E",name:"E", price:2}])
+
+    _id A,B,C print thase baki nai thai pan pasal orderd: false lakhvathi je error se te sivay pasal na print thase 
+
+    
+    db.books.insertMany([{_id:"C",name:"C", price:1}, {_id:"A",name:"D", price:2},{_id:"E",name:"E", price:2}], orderd:false)
+
+
+V-16  Schema Validation
+
+
