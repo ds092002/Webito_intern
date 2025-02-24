@@ -1,11 +1,11 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from "../utils/apiError";
-import { Video } from "../models/video.model";
-import { ApiResponse } from "../utils/ApiResponse";
 import mongoose, { isValidObjectId } from "mongoose";
-import { uploadOnCloudinary , deleteOnCloudinary } from "../utils/cloudinary";
-import {Like} from "../models/like.model";
-import { Comment } from "../models/comment.model"
+import { Video } from "../models/video.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js";
+import { Like } from "../models/like.model.js";
+import { Comment } from "../models/comment.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/apiError.js";
 
 // get all videos based on query, sort, pagination
 const getAllVideos = asyncHandler(async (req, res) => {
