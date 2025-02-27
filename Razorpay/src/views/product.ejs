@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stylish Razorpay Product Cards</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center p-10">
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Online Shopping</h1>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Product Card -->
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition duration-300 p-5 w-72 text-center">
+            <img class="w-40 h-40 object-cover mx-auto rounded-xl" src="https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg" alt="Mens Casual Slim Fit">
+            <h2 class="text-xl font-semibold text-gray-700 mt-4">Mens Casual Slim Fit</h2>
+            <p class="text-lg text-gray-600 my-2"><b>₹100</b></p>
+            <form class="pay-form">
+                <input type="hidden" name="name" value="Yellow Hoody">
+                <input type="hidden" name="amount" value="100">
+                <input type="hidden" name="description" value="Hoody Buying">
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2 rounded-lg transition duration-300">
+                    Pay Now
+                </button>
+            </form>
+        </div>
+
+        <!-- Second Product -->
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition duration-300 p-5 w-72 text-center">
+            <img class="w-40 h-40 object-cover mx-auto rounded-xl" src="https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg" alt="Mens Cotton Jacket">
+            <h2 class="text-xl font-semibold text-gray-700 mt-4">Mens Cotton Jacket</h2>
+            <p class="text-lg text-gray-600 my-2"><b>₹150</b></p>
+            <form class="pay-form">
+                <input type="hidden" name="name" value="Mens Cotton Jacket">
+                <input type="hidden" name="amount" value="150">
+                <input type="hidden" name="description" value="Jacket Buying">
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2 rounded-lg transition duration-300">
+                    Pay Now
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('.pay-form').submit(function(e){
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: "/createOrder",
+                    type: "POST",
+                    data: formData,
+                    success: function(res) {
+                        if (res.success) {
+                            let options = {
+                                "key": res.key_id,
+                                "amount": res.amount,
+                                "currency": "INR",
+                                "name": res.product_name,
+                                "description": res.description,
+                                "image": "https://img.freepik.com/premium-vector/ds-letter-logo-design_579179-1027.jpg?semt=ais_hybrid",
+                                "order_id": res.order_id,
+                                "handler": function (response) {
+                                    alert("Payment Succeeded");
+                                },
+                                "prefill": {
+                                    "contact": res.contact,
+                                    "name": res.name,
+                                    "email": res.email
+                                },
+                                "notes": {
+                                    "description": res.description
+                                },
+                                "theme": {
+                                    "color": "#4F46E5"
+                                }
+                            };
+                            var razorpayObject = new Razorpay(options);
+                            razorpayObject.on('payment.failed', function () {
+                                alert("Payment Failed");
+                            });
+                            razorpayObject.open();
+                        } else {
+                            alert(res.msg);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
