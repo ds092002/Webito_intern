@@ -110,4 +110,192 @@ V-15 ORDERD OPTION IN INSERT COMMAND
 
 V-16  Schema Validation
 
+    db.createCollection("nonfiction", {
+  validator: {
+    $jsonSchema: {
+      required: ["name", "price"],
+      properties: {
+        name: {
+          bsonType: "string",
+          description: "must be a string and required",
+        },
+        price: {
+          bsonType: "number",
+          description: "must be a number and required",
+        }
+      }
+    }
+  },
+  validationAction: "error",
+});
+
+
+V-17 Atomicity in MONGODB
+    --> if user inter many time send 10 user data but 5 insert and 5 not inser that time
+        Atomicity thay if all insert else not insert all
+
+V-18 MongoImport In Mongodb
+
+V-20 Comparison Operator
+$eq  --> for equal
+$ne  --> for not equal
+$lt  --> for less than
+$gt  --> for greater than
+$lte --> for less than or equal to
+$gte --> for greater than or equal to
+$in  --> for in (to check if a value exists in an array)
+$nin --> for not in (to check if a value does not exist in an array)
+
+==> db.Students.find({age:{$eq:5}})
+==> db.Students.find({age:{$ne:5}})
+
+V-21 Logical Operator
+    And ==>    db.Students.find({ $and: [ { age:{$lte:5} }, { age:{$gte:15} } ] })
+    Or  ==>    db.Students.find({ $or: [ { condition1 }, { condition2 } ] })
+    Not ==>    db.Students.find({ field: { $not: { condition } } })
+    Nor ==>    db.Students.find({ $nor: [ { age:{$lte:5} }, { age:{$gte:15} } ] })
+
+V-22 Mastring in mongodb
+    ==> { field_name: { $exists: true } }
+    ==> { field_name: { $exists: false } }
+    ==> { field_name: { $type: "string" } }
+
+V-24 array
+
+V-25 Sort 
+    Asending    => db.Students.find().sort( { age: 1} )    
+    Desending    => db.Students.find().sort( { age: -1} )    
+
+V-26 Advanced Update
+        db.students.insert({ name: "John Doe", age: 20, grade: "A" });
+
+        db.students.aggregate([
+           { $group: { _id: null, minAge: { $min: "$age" } } }
+        ]);
+
+        db.students.aggregate([
+           { $group: { _id: null, maxAge: { $max: "$age" } } }
+        ]);
+
+        db.students.update(
+           { name: "John Doe" },
+           { $mul: { age: 2 } }
+        );
+
+        db.students.update(
+           { name: "John Doe" },
+           { $unset: { grade: "" } }
+        );
+
+        db.students.update(
+           { name: "John Doe" },
+           { $rename: { "grade": "level" } }
+        );
+
+        db.students.update(
+           { name: "John Doe" },
+           { $set: { age: 21, grade: "B" } },
+           { upsert: true }
+        );
+
+v-27 Array Update
+    $push: Adds an element to an array.
+    $pull: Removes specified elements from an array.
+    $pop: Removes the first or last element from an array.
+    $addToSet: Adds an element to an array only if it doesn't already exist there.
+
+        db.collection.update(
+           { _id: 1 },
+           { $push: { scores: 89 } }
+        )
+
+        db.collection.update(
+           { _id: 1 },
+           { $pull: { scores: 89 } }
+        )
+
+        db.collection.update(
+           { _id: 1 },
+           { $pop: { scores: 1 } }  // Remove last element
+        )
+        db.collection.update(
+           { _id: 1 },
+           { $pop: { scores: -1 } } // Remove first element
+        )
+
+        db.collection.update(
+           { _id: 1 },
+           { $addToSet: { scores: 89 } }
+        )
+        
+V-28 Indexing in mongodb
+
+V-29 aggregation
+    => db.collection.aggregate(pipeline,options)
+
+    db.Students.aggregate( [ { $group: {_id:"$age",names: {$push:"$name"} } } ] )
+
+V-30 Bucket use in aggregate
+
+V-31 Lookup
+
+****|| orders ||**
+{ "_id": 1, "order_id": 101, "customer_id": 1, "amount": 500 }
+{ "_id": 2, "order_id": 102, "customer_id": 2, "amount": 300 }
+
+        ****|| customers ||**
+{ "_id": 1, "customer_name": "Virat Kohli", "city": "Delhi" }
+{ "_id": 2, "customer_name": "Rohit Sharma", "city": "Mumbai" }
+
+    db.orders.aggregate([
+   {
+      $lookup:
+         {
+           from: "customers",
+           localField: "customer_id",
+           foreignField: "_id",
+           as: "customer_info"
+         }
+   }
+])
+
+{
+    "_id": 1,
+    "order_id": 101,
+    "customer_id": 1,
+    "amount": 500,
+    "customer_info": [
+       {
+          "_id": 1,
+          "customer_name": "Virat Kohli",
+          "city": "Delhi"
+       }
+    ]
+ }
+ {
+    "_id": 2,
+    "order_id": 102,
+    "customer_id": 2,
+    "amount": 300,
+    "customer_info": [
+       {
+          "_id": 2,
+          "customer_name": "Rohit Sharma",
+          "city": "Mumbai"
+       }
+    ]
+ }
+
+V-32 Project
+
+
+V-34
+-> Authentication verifies the identity of users or clients trying to access the database.
+    ==> Username/Password:
+-> Authorization determines what actions authenticated users or clients are allowed to perform.
+    ==> Read: Users can read data.
+    ==> ReadWrite: Users can read and write data.
+    ==> dbAdmin: Users can perform administrative tasks.
+    ==> userAdmin: Users can manage user accounts and roles.
+
 
