@@ -131,7 +131,7 @@ V-16  Schema Validation
 
 
 V-17 Atomicity in MONGODB
-    --> if user inter many time send 10 user data but 5 insert and 5 not inser that time
+    --> if user inter many time send 10 user data but 5 insert and 5 not insert that time
         Atomicity thay if all insert else not insert all
 
 V-18 MongoImport In Mongodb
